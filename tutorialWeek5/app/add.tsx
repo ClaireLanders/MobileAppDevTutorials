@@ -1,30 +1,30 @@
 import { useRouter } from 'expo-router';
 import { useContext, useState } from 'react';
 import { Button, TextInput, View } from 'react-native';
+import { db } from '@/db/client';
+import { students as studentsTable } from '@/db/schema';
 import { StudentContext } from './_layout';
 
 export default function AddStudent() {
   const router = useRouter();
   const context = useContext(StudentContext);
-
-  if (!context) return null;
- 
-  const { students, setStudents } = context;
-
   const [name, setName] = useState('');
   const [major, setMajor] = useState('');
   const [year, setYear] = useState('');
 
-  const saveStudent = () => {
-    const newStudent = {
-      id: Date.now(),
+  if (!context) return null;
+  const { setStudents } = context;
+
+  const saveStudent = async () => {
+    await db.insert(studentsTable).values({
       name,
       major,
       year,
       count: 0,
-    };
+    });
 
-    setStudents([...students, newStudent]);
+    const rows = await db.select().from(studentsTable);
+    setStudents(rows);
     router.back();
   };
 
@@ -33,7 +33,6 @@ export default function AddStudent() {
       <TextInput placeholder="Name" value={name} onChangeText={setName} />
       <TextInput placeholder="Major" value={major} onChangeText={setMajor} />
       <TextInput placeholder="Year" value={year} onChangeText={setYear} />
-
       <Button title="Save" onPress={saveStudent} />
     </View>
   );

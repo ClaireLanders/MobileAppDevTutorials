@@ -1,6 +1,9 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useContext, useState } from 'react';
 import { Button, TextInput, View } from 'react-native';
+import { eq } from 'drizzle-orm';
+import { db } from '@/db/client';
+import { students as studentsTable } from '@/db/schema';
 import { Student, StudentContext } from '../../_layout';
 
 export default function EditStudent() {
@@ -22,15 +25,14 @@ export default function EditStudent() {
   const [major, setMajor] = useState(student.major);
   const [year, setYear] = useState(student.year);
 
-  const saveChanges = () => {
-    setStudents(
-      students.map(s =>
-        s.id === Number(id)
-          ? { ...s, name, major, year }
-          : s
-      )
-    );
+  const saveChanges = async () => {
+    await db
+      .update(studentsTable)
+      .set({ name, major, year })
+      .where(eq(studentsTable.id, Number(id)));
 
+    const rows = await db.select().from(studentsTable);
+    setStudents(rows);
     router.back();
   };
 
@@ -39,7 +41,6 @@ export default function EditStudent() {
       <TextInput value={name} onChangeText={setName} />
       <TextInput value={major} onChangeText={setMajor} />
       <TextInput value={year} onChangeText={setYear} />
-
       <Button title="Save Changes" onPress={saveChanges} />
     </View>
   );

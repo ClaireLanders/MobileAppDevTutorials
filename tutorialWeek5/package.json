@@ -2,14 +2,18 @@
   "name": "tutorialweek5",
   "main": "expo-router/entry",
   "version": "1.0.0",
-  "scripts": {
-    "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "lint": "expo lint"
-  },
+"scripts": {
+  "start": "expo start",
+  "reset-project": "node ./scripts/reset-project.js",
+  "android": "expo start --android",
+  "ios": "expo start --ios",
+  "web": "expo start --web",
+  "lint": "expo lint",
+  "generate": "drizzle-kit generate",
+  "push": "drizzle-kit push",
+  "studio": "drizzle-kit studio",
+  "seed": "tsx db/seed.ts"
+},
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
     "@react-navigation/bottom-tabs": "^7.4.0",
@@ -41,11 +45,8 @@
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
-    "better-sqlite3": "^12.8.0",
-    "drizzle-kit": "^0.31.10",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
-    "tsx": "^4.21.0",
     "typescript": "~5.9.2"
   },
   "private": true
