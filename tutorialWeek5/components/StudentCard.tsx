@@ -1,6 +1,5 @@
 import { Student } from '@/app/_layout';
 import InfoTag from '@/components/ui/info-tag';
-import PrimaryButton from '@/components/ui/primary-button';
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -14,20 +13,25 @@ export default function StudentCard({ student }: Props) {
     router.push({ pathname: '/student/[id]', params: { id: student.id.toString() } });
 
   return (
-    <View style={styles.card}>
-      <Pressable onPress={openDetails}>
-        <Text style={styles.name}>{student.name}</Text>
-      </Pressable>
-
-      <View style={styles.tags}>
-        <InfoTag label="Major" value={student.major} />
-        <InfoTag label="Year" value={student.year} />
+    <Pressable 
+      accessibilityLabel={'${studentSummary}, view details'}
+      accessibilityRole="button"
+      onPress={openDetails}      
+      style={({ pressed }) => [
+        styles.card,
+        pressed ? styles.cardPressed : null,
+        ]}>
+      <View>
+      <Text style={styles.name}>{student.name}</Text>
       </View>
 
-      <PrimaryButton compact label="View Profile" onPress={openDetails} />
-    </View>
-  );
-}
+      <View style={styles.tags}>
+          <InfoTag label="Major" value={student.major} />
+          <InfoTag label="Year" value={student.year} />
+        </View>
+      </Pressable>
+    );
+  }
 
 const styles = StyleSheet.create({
   card: {
@@ -38,6 +42,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     padding: 14,
   },
+
+  cardPressed: {
+    opacity: 0.88,
+  },
+  
   name: {
     color: '#111827',
     fontSize: 18,
